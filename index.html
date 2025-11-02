@@ -3,188 +3,189 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Merry Christmas Card</title>
+<title>Merry Christmas Letter</title>
 <style>
   body {
-    background: url('assets/307610.jpg') no-repeat center top/cover;
+    margin: 0;
     height: 100vh;
-    overflow: hidden;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    background: url('assets/307610.jpg') no-repeat center/cover;
     font-family: "Poppins", sans-serif;
-    position: relative;
+    overflow: hidden;
+    transition: filter 1s ease;
   }
 
-  .scene {
-    perspective: 2000px;
+  /* Container for envelope */
+  .envelope-container {
     position: relative;
-    z-index: 2;
+    width: 80vw;
+    max-width: 520px;
+    aspect-ratio: 4 / 3;
+    perspective: 1000px;
+    transition: filter 1s ease;
   }
 
+  /* Envelope base */
   .envelope {
     position: relative;
-    width: 600px;
-    height: 400px;
+    width: 100%;
+    height: 100%;
     background: #c0392b;
     border-radius: 10px;
-    transform-style: preserve-3d;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    border: 3px solid gold;
+    overflow: hidden;
     cursor: pointer;
-    box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    transition: all 1s ease;
   }
 
-  .envelope:hover {
-    transform: scale(1.05) rotateY(5deg);
-  }
-
-  .envelope::before {
-    content: "";
+  /* Envelope flap */
+  .flap {
     position: absolute;
-    inset: 0;
-    background: repeating-linear-gradient(135deg, #b33a2e 0 10px, #c0392b 10px 20px);
-    border-radius: 10px;
-    opacity: 0.2;
-  }
-
-  .top-flap, .bottom-flap, .left-flap, .right-flap {
-    position: absolute;
-    width: 0;
-    height: 0;
-    border-style: solid;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 50%;
+    background: linear-gradient(to bottom, #d64541, #922b21);
+    clip-path: polygon(0 0, 50% 100%, 100% 0);
+    transform-origin: top;
     transition: transform 1s ease-in-out;
+    z-index: 3;
   }
 
-  .top-flap {
-    border-width: 0 300px 200px 300px;
-    border-color: transparent transparent #e74c3c transparent;
-    top: 0;
-    left: 0;
-    transform-origin: top center;
-    z-index: 5;
-  }
-
-  .bottom-flap {
-    border-width: 200px 300px 0 300px;
-    border-color: #b02a1e transparent transparent transparent;
-    bottom: 0;
-    left: 0;
-  }
-
-  .left-flap {
-    border-width: 200px 0 200px 300px;
-    border-color: transparent transparent transparent #c0392b;
-    left: 0;
-    top: 0;
-  }
-
-  .right-flap {
-    border-width: 200px 300px 200px 0;
-    border-color: transparent #a93226 transparent transparent;
-    right: 0;
-    top: 0;
-  }
-
+  /* Seal */
   .seal {
     position: absolute;
-    top: 50%;
+    top: 45%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
-    width: 70px;
-    height: 70px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    z-index: 10;
-    box-shadow: 0 0 20px rgba(255,215,0,0.8);
-  }
-
-  .seal::after {
-    content: "🎁";
-    position: absolute;
+    background: radial-gradient(circle at 30% 30%, #ffd700, #b8860b);
+    box-shadow: 0 0 20px gold;
+    z-index: 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     font-size: 2em;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    transition: opacity 0.8s ease, transform 0.8s ease;
   }
 
-  .card {
+  /* Letter (inside envelope) */
+  .letter {
     position: absolute;
-    top: 10%;
+    bottom: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(50%);
-    width: 85%;
-    height: 65%;
-    background: #fffdf5;
-    border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    transform: translateX(-50%) translateY(100%);
+    width: 92%;
+    height: 110%;
+    background: #fffef9;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.3);
     text-align: center;
-    padding: 20px;
+    padding: 25px;
     opacity: 0;
-    transition: all 1s ease;
+    transition: transform 1.5s ease-in-out, opacity 1.2s ease;
     z-index: 2;
   }
 
-  .card h2 {
+  .letter h2 {
     color: #c0392b;
-    font-size: 2em;
+    font-size: 1.8em;
     margin-bottom: 10px;
     text-shadow: 0 0 10px gold;
   }
 
-  .card p {
+  .letter p {
     color: #2c3e50;
     font-size: 1em;
-    line-height: 1.5;
+    line-height: 1.7;
   }
 
-  .card .lights {
-    margin: 15px 0;
-    font-size: 1.5em;
-    animation: glow 2s infinite alternate;
+  /* Envelope opens */
+  .open .flap {
+    transform: rotateX(180deg);
   }
 
-  @keyframes glow {
-    0% { text-shadow: 0 0 5px red, 0 0 10px gold; }
-    100% { text-shadow: 0 0 20px yellow, 0 0 30px gold; }
+  .open .seal {
+    opacity: 0;
+    transform: scale(0.8);
   }
 
-  .envelope.open .top-flap {
-    transform: rotateX(-160deg);
-  }
-
-  .envelope.open .card {
-    transform: translateX(-50%) translateY(-80%);
+  /* Letter slides up */
+  .open .letter {
+    transform: translateX(-50%) translateY(-50%);
     opacity: 1;
+    z-index: 10;
+    animation: slideUp 1.5s ease-out;
   }
 
-  .reveal-image {
+  @keyframes slideUp {
+    from { transform: translateX(-50%) translateY(100%); opacity: 0; }
+    to { transform: translateX(-50%) translateY(-50%); opacity: 1; }
+  }
+
+  /* Letter popup (center of screen) */
+  .letter-popup {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.9);
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0.8);
+    background: #fffef9;
+    width: 90%;
+    max-width: 600px;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    opacity: 0;
+    z-index: 200;
+    animation: popUp 1s ease forwards;
+  }
+
+  @keyframes popUp {
+    to { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  }
+
+  .blurred {
+    filter: blur(8px);
+  }
+
+  /* Popup for money image */
+  .popup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
     visibility: hidden;
-    transition: opacity 1.5s ease, visibility 1s ease;
-    z-index: 999;
+    opacity: 0;
+    transition: opacity 1s ease, visibility 1s ease;
+    z-index: 300;
   }
 
-  .reveal-image img {
-    max-width: 80%;
-    max-height: 80%;
-    border-radius: 20px;
-    box-shadow: 0 0 30px gold;
-  }
-
-  .reveal-image.show {
-    opacity: 1;
+  .popup.show {
     visibility: visible;
+    opacity: 1;
   }
 
+  .popup img {
+    max-width: 85%;
+    max-height: 85%;
+    border-radius: 20px;
+    box-shadow: 0 0 40px gold;
+    animation: fadeInPop 1s ease forwards;
+  }
+
+  @keyframes fadeInPop {
+    from { transform: scale(0.7); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+  }
+
+  /* Snowflakes */
   .snowflake {
     position: fixed;
     top: -10px;
@@ -193,7 +194,7 @@
     user-select: none;
     animation: fall 10s linear infinite;
     opacity: 0.8;
-    z-index: 10;
+    z-index: 20;
   }
 
   @keyframes fall {
@@ -201,59 +202,62 @@
     100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
   }
 
-  /* 🌟 MOBILE FIXES */
+  /* Responsive */
   @media (max-width: 768px) {
-    .envelope {
-      transform: scale(0.7);
-    }
+    .envelope-container { width: 90vw; }
+    .letter h2 { font-size: 1.5em; }
+    .letter p { font-size: 0.95em; }
   }
 
   @media (max-width: 480px) {
-    .envelope {
-      transform: scale(0.55);
-    }
-
-    .card h2 {
-      font-size: 1.4em;
-    }
-
-    .card p {
-      font-size: 0.9em;
-    }
-
     .seal {
       width: 50px;
       height: 50px;
-    }
-
-    .seal::after {
       font-size: 1.5em;
     }
+    .letter {
+      height: 120%;
+      padding: 20px;
+    }
+    .letter h2 { font-size: 1.3em; }
+    .letter p { font-size: 0.9em; }
   }
 </style>
 </head>
 <body>
 
-<div class="scene">
+<div class="envelope-container" id="envelopeContainer">
   <div class="envelope" id="envelope">
-    <div class="top-flap"></div>
-    <div class="bottom-flap"></div>
-    <div class="left-flap"></div>
-    <div class="right-flap"></div>
-    <div class="seal"></div>
-
-    <div class="card" id="card">
+    <div class="flap"></div>
+    <div class="seal">🎁</div>
+    <div class="letter" id="letter">
       <h2>Merry Christmas 🎄</h2>
-      <div class="lights">✨✨✨✨✨</div>
-      <p>May your holidays sparkle with joy and laughter.<br>
-      Wishing you peace, love, and endless blessings this Christmas and throughout the New Year.<br><br>
-      With warmest wishes,<br>
-      <b>🎅 Your Secret Santa 🎁</b></p>
+      <p>
+        May your holidays sparkle with joy and laughter.<br>
+        Wishing you peace, love, and happiness this Christmas<br>
+        and throughout the coming year.<br><br>
+        With warmest wishes,<br>
+        <b>🎅 Your Secret Santa 🎁</b>
+      </p>
     </div>
   </div>
 </div>
 
-<div class="reveal-image" id="reveal">
+<!-- Popup letter -->
+<div class="letter-popup" id="letterPopup" style="display: none;">
+  <h2>Merry Christmas 🎄</h2>
+  <p>
+    May your holidays sparkle with joy and laughter.<br>
+    Wishing you peace, love, and happiness this Christmas<br>
+    and throughout the coming year.<br><br>
+    With warmest wishes,<br>
+    <b>🎁 From: your one and only...</b>
+    <b>🎅 Kian Harvey Pastrana Bernaldo</b>
+  </p>
+</div>
+
+<!-- Popup for money -->
+<div class="popup" id="popup">
   <img src="assets/money.jpg" alt="Surprise Gift">
 </div>
 
@@ -264,7 +268,9 @@
 <script>
   const envelope = document.getElementById('envelope');
   const bgMusic = document.getElementById('bg-music');
-  const reveal = document.getElementById('reveal');
+  const popup = document.getElementById('popup');
+  const letterPopup = document.getElementById('letterPopup');
+  const envelopeContainer = document.getElementById('envelopeContainer');
   let opened = false;
 
   envelope.addEventListener('click', () => {
@@ -273,12 +279,20 @@
       bgMusic.play();
       opened = true;
 
+      // After letter slides out completely (2s delay)
       setTimeout(() => {
-        reveal.classList.add('show');
+        envelopeContainer.classList.add('blurred');
+        letterPopup.style.display = 'block';
+      }, 2000);
+
+      // Show money popup after 20 seconds
+      setTimeout(() => {
+        popup.classList.add('show');
       }, 20000);
     }
   });
 
+  // Snowflakes animation
   function createSnowflakes(count) {
     for (let i = 0; i < count; i++) {
       const snowflake = document.createElement('div');
@@ -293,5 +307,6 @@
   }
   createSnowflakes(25);
 </script>
+
 </body>
 </html>
